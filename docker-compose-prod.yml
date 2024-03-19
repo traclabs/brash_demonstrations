@@ -1,0 +1,71 @@
+version: "3.8"
+services:
+  # NOTE: exposed ports are for debug purposes only. Volume mounts are for both debug and logging. 
+  fsw:
+    image: "cfs"
+    command: "./core-cpu2"
+    environment:
+      - DISPLAY=novnc:0.0
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.3
+    build:
+      context: .
+      dockerfile: cfs.Dockerfile
+      target: cfs
+      args:
+        - USER_UID=${UID:-1000}
+  rosgsw:
+    image: "spaceros-brash"
+    command: "./run_rosgsw.sh"
+    env_file:
+      - env.sh
+    environment:
+      - ROS_DOMAIN_ID=2
+      - DISPLAY=novnc:0.0
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.2
+    build:
+      context: .
+      dockerfile: spaceros_brash.Dockerfile
+      target: spaceros-brash
+      args:
+        - USER_UID=${UID:-1000}
+  rosfsw:
+    image: "spaceros-brash"
+    command: "./run_rosfsw.sh"
+    env_file:
+      - env.sh
+    environment:
+      - ROS_DOMAIN_ID=4
+      - DISPLAY=novnc:0.0
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.4
+    build:
+      context: .
+      dockerfile: spaceros_brash.Dockerfile
+      target: spaceros-brash
+      args:
+        - USER_UID=${UID:-1000}
+  novnc:
+    image: theasp/novnc:latest
+    environment:
+      # Adjust to your screen size
+      - DISPLAY_WIDTH=1920
+      - DISPLAY_HEIGHT=1080
+      - RUN_XTERM=no
+    ports:
+      - "8080:8080"
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.5
+        
+networks:
+  spaceip:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
