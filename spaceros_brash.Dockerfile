@@ -2,7 +2,7 @@
 # Build ros-base                               #
 # (ROS2 image with default packages)           #
 ################################################
-FROM ghcr.io/traclabs/spaceros_robots AS spaceros-base
+FROM ghcr.io/traclabs/spaceros_robots:latest AS spaceros-base
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install CFDP for large file transfer
@@ -47,26 +47,3 @@ RUN echo 'source ${CODE_DIR}/entrypoint.sh' >> ~/.bashrc
 # Get ready with brash workspace
 RUN mkdir -p ${CODE_DIR}/brash
 WORKDIR ${CODE_DIR}/brash
-
-##################################################
-# Build brash (Production)                       #
-##################################################
-FROM spaceros-brash-dev AS spaceros-brash
-
-# Copy brash
-COPY --chown=${USERNAME}:${USERNAME} brash ${CODE_DIR}/brash
-
-# Build the brash workspace
-WORKDIR ${CODE_DIR}/brash
-RUN source ${CODE_DIR}/demo_extras_ws/install/setup.bash &&  \
-    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
-
-# Build juicer
-COPY --chown=${USERNAME}:${USERNAME} juicer ${CODE_DIR}/juicer
-WORKDIR ${CODE_DIR}/juicer
-RUN  make
-
-# Set workspace
-WORKDIR ${CODE_DIR}/brash
-
-
