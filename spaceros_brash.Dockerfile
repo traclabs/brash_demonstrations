@@ -46,4 +46,9 @@ RUN echo 'source ${CODE_DIR}/entrypoint.sh' >> ~/.bashrc
 
 # Get ready with brash workspace
 RUN mkdir -p ${CODE_DIR}/brash
+
+# Create folder for juicer
+RUN mkdir -p ${CODE_DIR}/juicer
+
+# Make workspace brash
 WORKDIR ${CODE_DIR}/brash
