@@ -22,11 +22,15 @@ ENV CODE_DIR=/code
 FROM spaceros-base AS spaceros-brash-dev
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN sudo apt-get install -y \
+RUN sudo apt update \ 
+ && sudo apt -y upgrade \
+ && sudo apt-get install -y \
   libdwarf-dev \
   libelf-dev \
   libsqlite3-dev \
-  sqlitebrowser
+  sqlitebrowser \
+  ros-humble-rqt-topic \
+  ros-humble-rqt-publisher
 
 # Install additional packages for demos (rqt / steering plugin)
 RUN sudo mkdir -p ${CODE_DIR} && \
