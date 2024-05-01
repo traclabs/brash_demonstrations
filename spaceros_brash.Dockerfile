@@ -6,7 +6,9 @@ FROM ghcr.io/traclabs/spaceros_robots:latest AS spaceros-base
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install CFDP for large file transfer
-RUN pip3 install cfdp
+# Pymongo (bson) and tornado are for running the bridge_server
+# which is needed only for demos that run the OpenMCTROS plugin
+RUN pip3 install cfdp pymongo tornado
 
 # Switch to bash shell
 SHELL ["/bin/bash", "-c"]
@@ -22,15 +24,11 @@ ENV CODE_DIR=/code
 FROM spaceros-base AS spaceros-brash-dev
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN sudo apt update \ 
- && sudo apt -y upgrade \
- && sudo apt-get install -y \
+RUN sudo apt-get install -y \
   libdwarf-dev \
   libelf-dev \
   libsqlite3-dev \
-  sqlitebrowser \
-  ros-humble-rqt-topic \
-  ros-humble-rqt-publisher
+  sqlitebrowser
 
 # Install additional packages for demos (rqt / steering plugin)
 RUN sudo mkdir -p ${CODE_DIR} && \
