@@ -8,7 +8,7 @@ COMPOSE_FILE="docker-compose-dev.yml"
 CODE_DIR="/code"
 
 build_brash_code() {
-  docker compose -f ${COMPOSE_FILE} run -w ${CODE_DIR}/brash rosgsw colcon build --symlink-install
+  docker compose -f ${COMPOSE_FILE} run -w ${CODE_DIR}/brash rosgsw /bin/bash  -ic "colcon build --symlink-install"
   ret=$?
   if [ $ret -ne 0 ]; then
     echo "!! Failed in colcon build step !!"
