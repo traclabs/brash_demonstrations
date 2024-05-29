@@ -6,4 +6,6 @@ echo "*** Cloning brash ***"
 ./scripts/clone_brash.sh
 echo "*** Clone juicer ***"
 ./scripts/clone_juicer.sh
+echo "*** Clone PRIDE ***"
+./scripts/clone_pride.sh
 echo "Done!"

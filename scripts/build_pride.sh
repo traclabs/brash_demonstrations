@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 echo ""
-echo "##### Building brash #####"
+echo "##### Building pride #####"
 echo ""
 
-COMPOSE_FILE="pride_compose.yaml"
+COMPOSE_FILE="docker-compose-dev.yml"
 CODE_DIR="/code"
 
 # Build PRIDE

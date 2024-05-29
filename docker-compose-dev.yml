@@ -43,6 +43,27 @@ services:
       file: docker-compose-prod.yml
       service: novnc
 
+  pride:
+    image: "pride-dev"
+    command: >
+      bash -c "sudo service mysql start 
+      && sleep infinity"
+    environment:
+      - DISPLAY=novnc:0.0
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.6
+    build:
+      # NOTE: Actual build process must be executed discretely for dev mounts
+      context: .
+      dockerfile: pride.Dockerfile
+      target: pride-dev
+      args:
+        - USER_UID=${UID:-1000}
+    volumes:
+      - "./pride:/code/pride"
+    working_dir: /code/pride
+
 # NOTE: networks apparently can't be imported from related file?
 networks:
   spaceip:
