@@ -46,11 +46,15 @@ RUN source ${HOME_DIR}/spaceros_robots_ws/install/setup.bash &&  \
 COPY --chown=${USERNAME}:${USERNAME} config/brash_entrypoint.sh ${CODE_DIR}/entrypoint.sh
 RUN echo 'source ${CODE_DIR}/entrypoint.sh' >> ~/.bashrc
 
-# Get ready with brash workspace
-RUN mkdir -p ${CODE_DIR}/brash
+# Get ready with brash workspace, juicer and openmct
+RUN mkdir -p ${CODE_DIR}/brash && mkdir -p ${CODE_DIR}/juicer && mkdir -p ${CODE_DIR}/openmct_ros
 
-# Create folder for juicer
-RUN mkdir -p ${CODE_DIR}/juicer
+# Install nodejs
+RUN curl -SLO https://deb.nodesource.com/nsolid_setup_deb.sh \
+  && chmod 500 nsolid_setup_deb.sh \
+  && sudo ./nsolid_setup_deb.sh 18 \
+  && sudo apt-get install -y nodejs
+
 
 # Make workspace brash
 WORKDIR ${CODE_DIR}/brash

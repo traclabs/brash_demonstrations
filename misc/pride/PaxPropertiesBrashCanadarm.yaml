@@ -1,0 +1,31 @@
+# PAX property configuration for ROS project
+baseUri: http://localhost:8010
+sleep: 750
+prideViewServerUri: https://localhost:8000/api
+trustPrideView: true
+telemetryTries: 5
+instructionLoaDefaultIsAutomated: true
+stepLoaDefaultIsAutomated: true
+automatedCompletion: true
+logToFile: false
+logDirectory: logs
+coreThreads: 8
+maxThreads: 625
+paxUserId: pax
+waitForInterval: 1000
+waitForTimeoutBehavior: fail
+reexecuteCompleted: true
+heartbeatRate: 0.3
+notificationLevel: info
+bearerToken: 982c0639-4b2c-45be-8ff2-df3f53fcda72
+
+TelemetryServers:
+- location: brash_canadarm
+  plantUrl: http://localhost:9090
+  namespace: /groundsystem
+  implementation: com.traclabs.pax.telemetry.jros.JROSTelemetryServerConnection
+
+SystemRepresentations:
+- location: https://svn.traclabs.com/svn/ontology/trunk/docs/yaml_sysreps/BrashCanadarm.yaml
+  implementation: com.traclabs.pride.sysrep.yaml.QueryImpl
+  setShowParse: true

@@ -25,6 +25,7 @@ services:
       - "./brash:/code/brash"
       - "./cFS:/code/cFS"
       - "./juicer:/code/juicer"
+      - "./openmct_ros:/code/openmct_ros"      
     working_dir: /code/brash
   rosfsw:
     extends:

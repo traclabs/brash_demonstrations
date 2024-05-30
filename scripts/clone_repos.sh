@@ -8,4 +8,6 @@ echo "*** Clone juicer ***"
 ./scripts/clone_juicer.sh
 echo "*** Clone PRIDE ***"
 ./scripts/clone_pride.sh
+echo "*** Clone OpenMCT ***"
+./scripts/clone_openmct.sh
 echo "Done!"
