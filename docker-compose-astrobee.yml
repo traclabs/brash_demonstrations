@@ -1,0 +1,94 @@
+services:
+#  fsw:
+#    extends:
+#      file: docker-compose-prod.yml
+#      service: fsw
+#    image: "cfs-dev"
+#    build:
+#      context: .
+#      dockerfile: cfs.Dockerfile
+#      target: "cfs-dev"
+#    volumes:
+#      - "./cFS:/code/cFS"
+#    working_dir: /code/cFS/build/exe/cpu2
+#  rosgsw:
+#    extends:
+#      file: docker-compose-prod.yml
+#      service: rosgsw
+#    image: "spaceros-brash-dev"
+#    build:
+#      # NOTE: Actual build process must be executed discretely for dev mounts
+#      context: .
+#      dockerfile: spaceros_brash.Dockerfile
+#      target: spaceros-brash-dev
+#    volumes:
+#      - "./brash:/code/brash"
+#      - "./cFS:/code/cFS"
+#      - "./juicer:/code/juicer"
+#      - "./openmct_ros:/code/openmct_ros"      
+#    working_dir: /code/brash
+  rosfsw:
+    image: "astrobee_ros2"
+    environment:
+      - ROS_DOMAIN_ID=4
+      - DISPLAY=novnc:0.0
+    command: sleep infinity #"./run_rosfsw.sh"
+    env_file:
+      - env.sh
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.4    
+    build:
+      context: .
+      dockerfile: astrobee_ros2_brash.Dockerfile
+      target: astrobee_ros2
+      args:
+        - USER_UID=${UID:-1000}
+    volumes:
+      - "./brash:/code/brash"
+    working_dir: /code/brash
+    
+  novnc:
+    image: theasp/novnc:latest
+    environment:
+      # Adjust to your screen size
+      - DISPLAY_WIDTH=1920
+      - DISPLAY_HEIGHT=1080
+      - RUN_XTERM=no
+    ports:
+      - "8080:8080"
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.5
+#  pride:
+#    image: "pride-dev"
+#    command: >
+#      bash -c "sudo service mysql start 
+#      && sleep infinity"
+#    environment:
+#      - DISPLAY=novnc:0.0
+#    networks:
+#      spaceip:
+#        ipv4_address: 10.5.0.6
+#    build:
+#      # NOTE: Actual build process must be executed discretely for dev mounts
+#      context: .
+#      dockerfile: pride.Dockerfile
+#      target: pride-dev
+#      args:
+#        - USER_UID=${UID:-1000}
+#    volumes:
+#      - "./pride:/code/pride"
+#    working_dir: /code/pride
+
+# NOTE: networks apparently can't be imported from related file?
+networks:
+  spaceip:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
+
+      
+      
