@@ -8,12 +8,67 @@ Build spaceros-ros robots brash images (for rosfsw)
 
 1. Clone cFS, brash and juicer:
    
+   ```
    $ cd brash_demonstrations
-   $ ./scripts/clone_cfs.sh
-   $ ./scripts/clone_brash.sh
-   $ ./script/clone_juicer.sh
+   $ ./scripts/clone_repos
+   ```
    
 2. Build image for brash:
+ 
+   ```
+   $ ./scripts/build_images.sh
+   ```
+   
+3. Build cFS, brash, openMCT, pride:
+
+   ```
+   $ ./scripts/build_cfe.sh
+   $ ./scripts/build_brash.sh
+   $ ./scripts/build_openmct.sh
+   $ ./scripts/build_pride.sh
+   ```
+  
+  
+  
+Run Pride demos
+================
+
+(If only regular Pride-less demos, just do steps 1, 2 and 3)
+
+1. Start everything:
+
+   ```
+   $ docker compose -f docker-compose-dev.yml up
+   ```
+2. Start flight software (canadarm or rover)
+   
+   ```
+    docker exec -it brash_demonstrations-rosfsw-1 bash
+    ros2 launch brash_application_tools flight_canadarm.launch.py
+   ```
+3. Start ground software stuff. Note that for both canadarm and mars, this ground launch file starts OpenMCT, among other things.
+   
+   ```
+    docker exec -it brash_demonstrations-rosgsw-1 bash
+    ros2 launch brash_application_tools ground_canadarm.launch.py
+   ```
+   
+4. Start PRIDE View:
+
+   ```
+   $ docker exec -it brash_demonstrations-pride-1 bash
+   $ cd view/code
+   $ npm start
+   ```
+   
+5. Start PAX:
+
+   ```
+   $ docker exec -it brash_demonstrations-pride-1 bash
+   $ cd automate/code
+   $  ./run.sh --configFile PaxPropertiesBrashCanadarm.yaml # Or your SysRep
+   ```
+    
 
   
    
