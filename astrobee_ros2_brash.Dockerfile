@@ -1,6 +1,9 @@
 FROM ghcr.io/traclabs/astrobee_docker:latest-rolling-ubuntu20.04 AS astrobee_ros2
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install CFDP for large file transfer
+RUN pip3 install cfdp
+
 RUN apt-get update \
  && apt-get install -y \
   python3-pip \ 

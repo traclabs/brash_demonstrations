@@ -11,16 +11,24 @@ services:
     volumes:
       - "./cFS:/code/cFS"
     working_dir: /code/cFS/build/exe/cpu2
+
   rosgsw:
-    extends:
-      file: docker-compose-prod.yml
-      service: rosgsw
-    image: "spaceros-brash-dev"
+    image: "astrobee_ros2"
+    environment:
+      - ROS_DOMAIN_ID=2
+      - DISPLAY=novnc:0.0      
+    command: bash -c "source install/setup.bash && ./run_rosgsw.sh"
+    env_file:
+      - env.sh
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.2          
     build:
-      # NOTE: Actual build process must be executed discretely for dev mounts
       context: .
-      dockerfile: spaceros_brash.Dockerfile
-      target: spaceros-brash-dev
+      dockerfile: astrobee_ros2_brash.Dockerfile
+      target: astrobee_ros2
+      args:
+        - USER_UID=${UID:-1000}      
     volumes:
       - "./brash:/code/brash"
       - "./cFS:/code/cFS"
@@ -28,22 +36,39 @@ services:
       - "./openmct_ros:/code/openmct_ros"      
     working_dir: /code/brash
   rosfsw:
-    extends:
-      file: docker-compose-prod.yml
-      service: rosfsw
-    image: "spaceros-brash-dev"
+    image: "astrobee_ros2"
+    environment:
+      - ROS_DOMAIN_ID=4
+      - DISPLAY=novnc:0.0
+    command: bash -c "source install/setup.bash && ./run_rosfsw.sh"
+    env_file:
+      - env.sh
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.4    
     build:
       context: .
-      dockerfile: spaceros_brash.Dockerfile
-      target: spaceros-brash-dev
+      dockerfile: astrobee_ros2_brash.Dockerfile
+      target: astrobee_ros2
+      args:
+        - USER_UID=${UID:-1000}
     volumes:
       - "./brash:/code/brash"
     working_dir: /code/brash
+    
   novnc:
-    extends:
-      file: docker-compose-prod.yml
-      service: novnc
-
+    image: theasp/novnc:latest
+    environment:
+      # Adjust to your screen size
+      - DISPLAY_WIDTH=1920
+      - DISPLAY_HEIGHT=1080
+      - RUN_XTERM=no
+    ports:
+      - "8080:8080"
+    networks:
+      spaceip:
+        ipv4_address: 10.5.0.5
+        
   pride:
     image: "pride-dev"
     command: >
